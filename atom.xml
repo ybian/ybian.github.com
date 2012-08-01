@@ -4,7 +4,7 @@
   <title><![CDATA[Power of Two]]></title>
   <link href="http://ybian.github.com/atom.xml" rel="self"/>
   <link href="http://ybian.github.com/"/>
-  <updated>2012-08-01T17:23:58+08:00</updated>
+  <updated>2012-08-01T21:41:29+08:00</updated>
   <id>http://ybian.github.com/</id>
   <author>
     <name><![CDATA[Bian Ying]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[bring the best of two worlds - xvim]]></title>
+    <link href="http://ybian.github.com/blog/2012/08/01/bring-the-best-of-two-worlds-xvim/"/>
+    <updated>2012-08-01T17:32:00+08:00</updated>
+    <id>http://ybian.github.com/blog/2012/08/01/bring-the-best-of-two-worlds-xvim</id>
+    <content type="html"><![CDATA[<p>I have been a happy Vim user for more than 10 years. I use Vim for almost all my text editing work, including
+system administration, command line editing, blog writing and coding, except for one thing: iOS/Mac programming,
+for which I never feel comfortable to do in Vim. <!-- more -->Instead, I use Xcode. Xcode is the natural choice for iOS/Mac
+programming as it has some neat features that other apps can hardly beat with, for example, the integration of
+interface builder and app distribution, and more importantly, code completion (I cannot imagine coding objective-C
+without code completion).</p>
+
+<p>Xcode rocks in every aspect, except for&#8230; the editor. It lacks a lot of shortcuts that are in your Vim muscle memory.
+e.g: <code>dd</code> to delete a line, <code>yy</code> to copy a line. Is it possible to replace the editor with a Vim simulator?</p>
+
+<p>I did not think so until I came across <a href="https://github.com/JugglerShu/XVim/">XVim</a> recently.</p>
+
+<p>Per its <code>READEME</code>:</p>
+
+<blockquote><p>XVim is a Vim plugin for Xcode. The plugin intends to offer a compelling Vim experience without the need to give up any Xcode features.</p></blockquote>
+
+<p>It really works as advertised. With this plugin installed per instructions, I can finally turn the Xcode editor to behave just like Vim, and
+all Xcode goodnesses are still there!</p>
+
+<p>There is an issue, although. As the <code>timeoutlen</code> option is not implemented by that plugin, multiple keystroke mapping does
+not work well in XVim, which is a problem to me, as I always have <code>;;</code> mapped to <code>ESC</code>.</p>
+
+<p>I spent a couple of hours fixing this. My code changes have been sent out as a pull request <a href="https://github.com/JugglerShu/XVim/pull/252">here</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[make quicksilver switch keyboard automatically]]></title>
@@ -36,7 +67,7 @@ Quicksilver do that?&#8221;. Oh..no, at least not yet. But I got the motivation 
 compete better against others.</p>
 
 <p>With the help of nice guys at <a href="https://github.com/quicksilver">Quicksilver</a>, I sent out the pull request and made a lot of changes
-per comments. It is still not merged yet, but I have the confidence that they will. ;-)</p>
+per comments. It is still not merged yet, but I have the confidence that it will be. ;-)</p>
 
 <p>The link to my pull request is <a href="https://github.com/quicksilver/Quicksilver/pull/987">here</a>. And the following is peak view of how
 this feature works:</p>
