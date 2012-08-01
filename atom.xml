@@ -4,7 +4,7 @@
   <title><![CDATA[Power of Two]]></title>
   <link href="http://ybian.github.com/atom.xml" rel="self"/>
   <link href="http://ybian.github.com/"/>
-  <updated>2012-08-01T13:11:32+08:00</updated>
+  <updated>2012-08-01T17:23:58+08:00</updated>
   <id>http://ybian.github.com/</id>
   <author>
     <name><![CDATA[Bian Ying]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[make quicksilver switch keyboard automatically]]></title>
+    <link href="http://ybian.github.com/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically/"/>
+    <updated>2012-08-01T16:29:00+08:00</updated>
+    <id>http://ybian.github.com/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically</id>
+    <content type="html"><![CDATA[<p>If you are a Quicksilver fan and also a non-English native (like me), the following situation must sound
+familiar to you: you activated Quicksilver, started to type a couple of letters and immediately
+realized that you forgot to switch to English keyboard first, then you switched to English keyboard and
+continued your workflow. Wouldn&#8217;t your life be easier if Quicksilver can switch to English keyboard automatically
+once it is activated?</p>
+
+<!-- more -->
+
+
+<p>Personally, I would love to have this feature so my workflow would not interrupted. Someone else share this same
+opinion with me. There is a feature request on Quicksilver&#8217;s issue tracking system on github.</p>
+
+<p>What really triggered me to implement this feature rather than waiting for others to do that is a &#8220;Alfred vs Quicksilver&#8221; debate
+in a local forum. An alfred user claimed that &#8220;my alfred can automatically switch my keyboard to English once activated. Can your
+Quicksilver do that?&#8221;. Oh..no, at least not yet. But I got the motivation to implement this, just for my favorite mac tool to
+compete better against others.</p>
+
+<p>With the help of nice guys at <a href="https://github.com/quicksilver">Quicksilver</a>, I sent out the pull request and made a lot of changes
+per comments. It is still not merged yet, but I have the confidence that they will. ;-)</p>
+
+<p>The link to my pull request is <a href="https://github.com/quicksilver/Quicksilver/pull/987">here</a>. And the following is peak view of how
+this feature works:</p>
+
+<p><img src="http://ybian.github.com/images/quicksilver-keyboard-switch.jpg"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A simple way to 'cd' to current finder folder]]></title>

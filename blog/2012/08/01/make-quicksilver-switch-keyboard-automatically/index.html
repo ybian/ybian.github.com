@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>A simple way to 'cd' to current finder folder - Power of Two</title>
+  <title>make quicksilver switch keyboard automatically - Power of Two</title>
   <meta name="author" content="Bian Ying">
 
   
-  <meta name="description" content="On my mac, I need to spend a lot of time working with Finder and iTerm (or Terminal), and I find
-it tedious to switch between those 2 apps as I often &hellip;">
+  <meta name="description" content="If you are a Quicksilver fan and also a non-English native (like me), the following situation must sound
+familiar to you: you activated Quicksilver, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ it tedious to switch between those 2 apps as I often &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ybian.github.com/blog/2012/08/01/a-simple-way-to-cd-to-current-finder-folder/">
+  <link rel="canonical" href="http://ybian.github.com/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -68,7 +68,7 @@ it tedious to switch between those 2 apps as I often &hellip;">
   
   <header>
     
-      <h1 class="entry-title">A Simple Way to 'Cd' to Current Finder Folder</h1>
+      <h1 class="entry-title">Make Quicksilver Switch Keyboard Automatically</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@ it tedious to switch between those 2 apps as I often &hellip;">
   
 
 
-<time datetime="2012-08-01T11:33:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2012</time>
+<time datetime="2012-08-01T16:29:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,61 +93,30 @@ it tedious to switch between those 2 apps as I often &hellip;">
   </header>
 
 
-<div class="entry-content"><p>On my mac, I need to spend a lot of time working with Finder and iTerm (or Terminal), and I find
-it tedious to switch between those 2 apps as I often need to open the working directory of iTerm inside Finder, and the opposite, cd to the current Finder folder in terminal.</p>
+<div class="entry-content"><p>If you are a Quicksilver fan and also a non-English native (like me), the following situation must sound
+familiar to you: you activated Quicksilver, started to type a couple of letters and immediately
+realized that you forgot to switch to English keyboard first, then you switched to English keyboard and
+continued your workflow. Wouldn&#8217;t your life be easier if Quicksilver can switch to English keyboard automatically
+once it is activated?</p>
 
 <!-- more -->
 
 
-<p>The former is easy to accomplish by using the magic <code>open .</code> command in terminal and I have been using it for years. Very handy!
-For the latter, I have tried several solutions but was never satisfied. Here are some solutions I tried before:</p>
+<p>Personally, I would love to have this feature so my workflow would not interrupted. Someone else share this same
+opinion with me. There is a feature request on Quicksilver&#8217;s issue tracking system on github.</p>
 
-<ul>
-<li><em>Pathfinder</em>: Yes, pathfinder is a nice replacement to Finder and has terminal integration. It has a lot of features, but what I really need is a little piece. So this is an overkill to me.</li>
-<li><em>Visor (TotalTerminal) / iTerm Hotkey Window</em>: Both can be used to open an overlay terminal window, but not be able to <code>cd</code> to the current folder automatically. And, it was not flexible to be enforced to work
-in that overlay window. I want to work in whatever terminal session that is already opened in my iTerm!</li>
-<li><em>Go2Shell</em>: This is a little program which allows you to open the current finder folder in terminal. It works but it is still not flexible either. It always opens a new terminal window, and cannot let you work
-in your existing session.</li>
-</ul>
+<p>What really triggered me to implement this feature rather than waiting for others to do that is a &#8220;Alfred vs Quicksilver&#8221; debate
+in a local forum. An alfred user claimed that &#8220;my alfred can automatically switch my keyboard to English once activated. Can your
+Quicksilver do that?&#8221;. Oh..no, at least not yet. But I got the motivation to implement this, just for my favorite mac tool to
+compete better against others.</p>
 
+<p>With the help of nice guys at <a href="https://github.com/quicksilver">Quicksilver</a>, I sent out the pull request and made a lot of changes
+per comments. It is still not merged yet, but I have the confidence that they will. ;-)</p>
 
-<p>So I decided to implement my own solution. It turns out to be easier that what I expected. What I need is to write is a little AppleScript and create a shell alias.</p>
+<p>The link to my pull request is <a href="https://github.com/quicksilver/Quicksilver/pull/987">here</a>. And the following is peak view of how
+this feature works:</p>
 
-<p>First, I need to write a little AppleScript code as the following:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>try
-</span><span class='line'>    tell application "Finder"
-</span><span class='line'>        set this_folder to (folder of the front window) as alias
-</span><span class='line'>    end tell
-</span><span class='line'>on error
-</span><span class='line'>    set the this_folder to path to desktop folder as alias
-</span><span class='line'>end try
-</span><span class='line'>
-</span><span class='line'>set full_path to POSIX path of this_folder</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Write the above code in a text editor and save it. I saved it as <code>~/bin/extra/GetCurrentFinderFolder.scpt</code>.</p>
-
-<p>The script is self-explanatory, if you execute it in command line via <code>osascript /path/to/your_script</code>, it would output the path of the opened folder in Finder.</p>
-
-<p>Next, create a shell alias and add it in your <code>.bashrc</code> or <code>.zshrc</code>:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>alias cdf="cd \"\`osascript ~/bin/extra/GetCurrentFinderFolder.scpt\`\""</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Note that you have to carefully escape the quote marks like above.</p>
-
-<p>Now, you can use the handy <code>cdf</code> alias wherever you want in your terminal! I have been using this for a month and really enjoy it.</p>
+<p><img src="/images/quicksilver-keyboard-switch.jpg"></p>
 </div>
 
 
@@ -170,7 +139,7 @@ in your existing session.</li>
   
 
 
-<time datetime="2012-08-01T11:33:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2012</time>
+<time datetime="2012-08-01T16:29:00+08:00" pubdate data-updated="true">Aug 1<span>st</span>, 2012</time>
       
 
 
@@ -178,7 +147,7 @@ in your existing session.</li>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ybian.github.com/blog/2012/08/01/a-simple-way-to-cd-to-current-finder-folder/" data-via="ybian" data-counturl="http://ybian.github.com/blog/2012/08/01/a-simple-way-to-cd-to-current-finder-folder/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ybian.github.com/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically/" data-via="ybian" data-counturl="http://ybian.github.com/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically/" >Tweet</a>
   
   
   
@@ -187,10 +156,8 @@ in your existing session.</li>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/07/31/this-is-a-test-post/" title="Previous Post: This is a test post">&laquo; This is a test post</a>
+        <a class="basic-alignment left" href="/blog/2012/08/01/a-simple-way-to-cd-to-current-finder-folder/" title="Previous Post: A simple way to 'cd' to current finder folder">&laquo; A simple way to 'cd' to current finder folder</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically/" title="Next Post: make quicksilver switch keyboard automatically">make quicksilver switch keyboard automatically &raquo;</a>
       
     </p>
   </footer>
@@ -294,8 +261,8 @@ in your existing session.</li>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://ybian.github.com/blog/2012/08/01/a-simple-way-to-cd-to-current-finder-folder/';
-        var disqus_url = 'http://ybian.github.com/blog/2012/08/01/a-simple-way-to-cd-to-current-finder-folder/';
+        var disqus_identifier = 'http://ybian.github.com/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically/';
+        var disqus_url = 'http://ybian.github.com/blog/2012/08/01/make-quicksilver-switch-keyboard-automatically/';
         var disqus_script = 'embed.js';
       
     (function () {
