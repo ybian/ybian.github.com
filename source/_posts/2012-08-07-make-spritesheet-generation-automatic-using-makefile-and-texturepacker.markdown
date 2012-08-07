@@ -12,14 +12,13 @@ the process that I followed was:
 Open the zss file -> Select all -> Delete -> Import -> Select all -> Publish (assuming I had configured the publish location correctly)
 
 It usually only takes one minute or two, but it becomes very tedious if you repeat it more than 3 times. So I decided to find a way to automate the process, and I found it.
+<!-- more -->
 
 The key to the solution is TexturePacker - a better SpirteSheet generation tool that supports command line. TexturePacker has a lot of amazing features, but the killing feature for me is
 command line support, which makes automation easy to implement. Yes, you can easily write a shell script to automate your process of regenerating your spritesheets. But you can make the process
 more seamless by integrating it into a Makefile that can automatically be called when you build your game in Xcode.
 
 Read below for detail steps to accomplish this.
-
-<!-- more -->
 
 ### Create a new target
 
