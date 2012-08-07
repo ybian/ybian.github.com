@@ -4,7 +4,7 @@
   <title><![CDATA[Power of Two]]></title>
   <link href="http://ybian.github.com/atom.xml" rel="self"/>
   <link href="http://ybian.github.com/"/>
-  <updated>2012-08-01T21:41:29+08:00</updated>
+  <updated>2012-08-07T14:07:29+08:00</updated>
   <id>http://ybian.github.com/</id>
   <author>
     <name><![CDATA[Bian Ying]]></name>
@@ -12,6 +12,133 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[make spritesheet generation automatic using makefile and texturepacker]]></title>
+    <link href="http://ybian.github.com/blog/2012/08/07/make-spritesheet-generation-automatic-using-makefile-and-texturepacker/"/>
+    <updated>2012-08-07T11:23:00+08:00</updated>
+    <id>http://ybian.github.com/blog/2012/08/07/make-spritesheet-generation-automatic-using-makefile-and-texturepacker</id>
+    <content type="html"><![CDATA[<p>In the current game that I am developing, I need to update spritesheets frequently to incorporate changes from my artist. As I was using zwoptex as the SpriteSheet generation tool,
+the process that I followed was:</p>
+
+<p>Open the zss file -> Select all -> Delete -> Import -> Select all -> Publish (assuming I had configured the publish location correctly)</p>
+
+<p>It usually only takes one minute or two, but it becomes very tedious if you repeat it more than 3 times. So I decided to find a way to automate the process, and I found it.</p>
+
+<p>The key to the solution is TexturePacker - a better SpirteSheet generation tool that supports command line. TexturePacker has a lot of amazing features, but the killing feature for me is
+command line support, which makes automation easy to implement. Yes, you can easily write a shell script to automate your process of regenerating your spritesheets. But you can make the process
+more seamless by integrating it into a Makefile that can automatically be called when you build your game in Xcode.</p>
+
+<p>Read below for detail steps to accomplish this.</p>
+
+<!-- more -->
+
+
+<h3>Create a new target</h3>
+
+<ul>
+<li><p>Select your project root node in Xcode left navigator (1), and click &#8220;Add target&#8221; (2), in the pop-up dialog, choose <code>OS X -&gt; Other -&gt; External build system</code>, name it whatever you want.</p></li>
+<li><p>Select the newly created target (3), leave build tool as <code>/usr/bin/make</code> and arguments unchanged, configure &#8216;Directory&#8217; to wherever you plan to put your Makefile (4). In my case, I set it to &#8220;Resources&#8221; folder under my project.</p></li>
+</ul>
+
+
+<p><img src="http://ybian.github.com/images/create-target-in-xcode.jpg"></p>
+
+<h3>Add target dependencies to your existing target</h3>
+
+<ul>
+<li>Select your existing target, switch to &#8220;Build Phases&#8221; tab, expand the first section titled &#8220;Target Dependencies&#8221;, click &#8220;+&#8221; icon, choose the target you created in the previous step.</li>
+</ul>
+
+
+<h3>Add the Makefile</h3>
+
+<ul>
+<li>Create a new file named <code>Makefile</code>, add it to the directory you configured in the step &#8220;Create a new target&#8221;. And, edit the file content to something similar to below:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>An example of Makefile  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">_IPADHD</span>    <span class="o">=</span> ipadhd
+</span><span class='line'><span class="nv">_IPAD</span>     <span class="o">=</span> ipad
+</span><span class='line'><span class="nv">_HD</span>   <span class="o">=</span> iphonehd
+</span><span class='line'><span class="nv">_NORMAL</span>   <span class="o">=</span> iphone
+</span><span class='line'><span class="nv">TP</span>    <span class="o">=</span> /usr/local/bin/texturepacker
+</span><span class='line'><span class="nv">CV</span>    <span class="o">=</span> /opt/local/bin/convert
+</span><span class='line'><span class="nv">TP_OPTS</span>   <span class="o">=</span> --data <span class="k">$(</span>basename <span class="nv">$@</span><span class="k">)</span>.plist --sheet <span class="nv">$@</span> --format cocos2d --algorithm Basic --no-trim
+</span><span class='line'><span class="nv">SPRITESHEET_DIR</span> <span class="o">=</span> ../../assets/SpriteSheet
+</span><span class='line'>
+</span><span class='line'>all:SpriteSheet.png
+</span><span class='line'>
+</span><span class='line'>SpriteSheet-ipadhd.png:<span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPADHD<span class="k">)</span>/*.png <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPADHD<span class="k">)</span>
+</span><span class='line'>  <span class="k">$(</span>TP<span class="k">)</span> <span class="k">$(</span>TP_OPTS<span class="k">)</span> <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPADHD<span class="k">)</span>/*.png
+</span><span class='line'>
+</span><span class='line'>SpriteSheet-ipad.png:SpriteSheet-ipadhd.png
+</span><span class='line'>  -rm <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPAD<span class="k">)</span>/*
+</span><span class='line'>  <span class="k">for </span>x in <span class="nv">$$</span><span class="o">(</span>ls <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPADHD<span class="k">)</span>/*.png<span class="o">)</span>; <span class="k">do</span> <span class="se">\</span>
+</span><span class='line'>      <span class="k">$(</span>CV<span class="k">)</span> <span class="nv">$$</span>x -resize 50% <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPAD<span class="k">)</span>/<span class="nv">$$</span><span class="o">{</span>x##*/<span class="o">}</span>; <span class="se">\</span>
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'>  <span class="k">$(</span>TP<span class="k">)</span> <span class="k">$(</span>TP_OPTS<span class="k">)</span> <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPAD<span class="k">)</span>/*.png
+</span><span class='line'>
+</span><span class='line'>SpriteSheet-hd.png:SpriteSheet-ipad.png
+</span><span class='line'>  -rm <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_HD<span class="k">)</span>/*
+</span><span class='line'>  <span class="k">for </span>x in <span class="nv">$$</span><span class="o">(</span>ls <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_IPAD<span class="k">)</span>/*.png<span class="o">)</span>; <span class="k">do</span> <span class="se">\</span>
+</span><span class='line'>      <span class="k">$(</span>CV<span class="k">)</span> <span class="nv">$$</span>x -resize 85% <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_HD<span class="k">)</span>/<span class="nv">$$</span><span class="o">{</span>x##*/<span class="o">}</span>; <span class="se">\</span>
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'>  <span class="k">$(</span>TP<span class="k">)</span> <span class="k">$(</span>TP_OPTS<span class="k">)</span> <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_HD<span class="k">)</span>/*.png
+</span><span class='line'>
+</span><span class='line'>SpriteSheet.png:SpriteSheet-hd.png
+</span><span class='line'>  -rm <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_NORMAL<span class="k">)</span>/*
+</span><span class='line'>  <span class="k">for </span>x in <span class="nv">$$</span><span class="o">(</span>ls <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_HD<span class="k">)</span>/*.png<span class="o">)</span>; <span class="k">do</span> <span class="se">\</span>
+</span><span class='line'>      <span class="k">$(</span>CV<span class="k">)</span> <span class="nv">$$</span>x -resize 50% <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_NORMAL<span class="k">)</span>/<span class="nv">$$</span><span class="o">{</span>x##*/<span class="o">}</span>; <span class="se">\</span>
+</span><span class='line'>  <span class="k">done</span>
+</span><span class='line'>  <span class="k">$(</span>TP<span class="k">)</span> <span class="k">$(</span>TP_OPTS<span class="k">)</span> <span class="k">$(</span>SPRITESHEET_DIR<span class="k">)</span>/<span class="k">$(</span>_NORMAL<span class="k">)</span>/*.png
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This Makefile set a &#8220;source directory&#8221; as the prerequisite of the target <code>SpriteSheet-ipadhd.png</code>, whenever a change is made to the directory, this target will be updated, using the TexturePacker
+command in that rule. Besides, there are 3 other rules for -ipad, -hd and normal spritesheets as well, whenever the <code>-ipadhd</code> version gets updated, other versions of SpriteSheets need to be updated
+as well. In those rules, <code>convert</code> command is used to resize images before passing through them to TexturePacker.</p>
+
+<h3>Done</h3>
+
+<p>With this setup, it now becomes a breeze to update your spritesheet: just throw your new images into your assets directory and then rebuild your game. Everything will be done automatically for you!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[bring the best of two worlds - xvim]]></title>

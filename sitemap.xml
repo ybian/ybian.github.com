@@ -21,11 +21,17 @@
         <lastmod>2012-08-01T21:41:22+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://ybian.github.com/blog/2012/08/07/make-spritesheet-generation-automatic-using-makefile-and-texturepacker/
+        </loc>
+        <lastmod>2012-08-07T14:07:28+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://ybian.github.com/blog/archives/</loc>
-        <lastmod>2012-08-01T21:41:22+08:00</lastmod>
+        <lastmod>2012-08-07T14:07:28+08:00</lastmod>
     </url>
     <url>
         <loc>http://ybian.github.com/</loc>
-        <lastmod>2012-08-01T21:41:22+08:00</lastmod>
+        <lastmod>2012-08-07T14:07:28+08:00</lastmod>
     </url>
 </urlset>

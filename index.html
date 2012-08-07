@@ -9,8 +9,7 @@
   <meta name="author" content="Bian Ying">
 
   
-  <meta name="description" content="I have been a happy Vim user for more than 10 years. I use Vim for almost all my text editing work, including
-system administration, command line &hellip;">
+  <meta name="description" content="In the current game that I am developing, I need to update spritesheets frequently to incorporate changes from my artist. As I was using zwoptex as &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +64,60 @@ system administration, command line &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/07/make-spritesheet-generation-automatic-using-makefile-and-texturepacker/">Make Spritesheet Generation Automatic Using Makefile and Texturepacker</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-07T11:23:00+08:00" pubdate data-updated="true">Aug 7<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/08/07/make-spritesheet-generation-automatic-using-makefile-and-texturepacker/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the current game that I am developing, I need to update spritesheets frequently to incorporate changes from my artist. As I was using zwoptex as the SpriteSheet generation tool,
+the process that I followed was:</p>
+
+<p>Open the zss file -> Select all -> Delete -> Import -> Select all -> Publish (assuming I had configured the publish location correctly)</p>
+
+<p>It usually only takes one minute or two, but it becomes very tedious if you repeat it more than 3 times. So I decided to find a way to automate the process, and I found it.</p>
+
+<p>The key to the solution is TexturePacker - a better SpirteSheet generation tool that supports command line. TexturePacker has a lot of amazing features, but the killing feature for me is
+command line support, which makes automation easy to implement. Yes, you can easily write a shell script to automate your process of regenerating your spritesheets. But you can make the process
+more seamless by integrating it into a Makefile that can automatically be called when you build your game in Xcode.</p>
+
+<p>Read below for detail steps to accomplish this.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/08/07/make-spritesheet-generation-automatic-using-makefile-and-texturepacker/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -259,6 +312,10 @@ Violets are blue</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/08/07/make-spritesheet-generation-automatic-using-makefile-and-texturepacker/">make spritesheet generation automatic using makefile and texturepacker</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/08/01/bring-the-best-of-two-worlds-xvim/">bring the best of two worlds - xvim</a>
