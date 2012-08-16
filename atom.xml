@@ -4,7 +4,7 @@
   <title><![CDATA[Power of Two]]></title>
   <link href="http://ybian.github.com/atom.xml" rel="self"/>
   <link href="http://ybian.github.com/"/>
-  <updated>2012-08-07T17:08:00+08:00</updated>
+  <updated>2012-08-16T20:58:31+08:00</updated>
   <id>http://ybian.github.com/</id>
   <author>
     <name><![CDATA[Bian Ying]]></name>
@@ -12,6 +12,185 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A Quicksilver action to create new reminders]]></title>
+    <link href="http://ybian.github.com/blog/2012/08/15/a-quicksilver-action-to-create-new-reminders/"/>
+    <updated>2012-08-15T15:27:00+08:00</updated>
+    <id>http://ybian.github.com/blog/2012/08/15/a-quicksilver-action-to-create-new-reminders</id>
+    <content type="html"><![CDATA[<p>I recently switched to Reminder.app as my ToDo management tool, after upgrading to Mountain Lion. The only thing I missed is a hotkey window
+to create a new reminder instantly. As always, I turn to Quicksilver for this kind of things.</p>
+
+<p>So, I wrote a Quicksilver action (in Ruby). The following is the screenshot of how it works in action.
+<img src="http://ybian.github.com/images/make_new_reminder.jpg"></p>
+
+<!-- more -->
+
+
+<p>And here is the source code. Just drop it under <code>~/Library/Application Support/Quicksilver/Actions</code> and restart Quicksilver.</p>
+
+<figure class='code'><figcaption><span> (NewReminder.rb)</span> <a href='http://ybian.github.com/downloads/code/NewReminder.rb'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#!/usr/bin/ruby</span>
+</span><span class='line'><span class="c1"># as of 0.7.0, chronic has problem with ruby 1.9.3. So use system ruby</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;rubygems&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;chronic&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">AS_GET_LIST</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">EOF</span>
+</span><span class='line'><span class="sh">on run argv</span>
+</span><span class='line'><span class="sh">  set listStr to &quot;&quot;</span>
+</span><span class='line'><span class="sh">  tell application &quot;Reminders&quot;</span>
+</span><span class='line'><span class="sh">    repeat with listIndex from 1 to (count of list)</span>
+</span><span class='line'><span class="sh">        set oneList to list listIndex</span>
+</span><span class='line'><span class="sh">        if listStr is equal to &quot;&quot; then</span>
+</span><span class='line'><span class="sh">            set listStr to (name of oneList)</span>
+</span><span class='line'><span class="sh">        else</span>
+</span><span class='line'><span class="sh">            set listStr to listStr &amp; &quot;|&quot; &amp; (name of oneList)</span>
+</span><span class='line'><span class="sh">        end if</span>
+</span><span class='line'><span class="sh">    end repeat</span>
+</span><span class='line'><span class="sh">  end tell</span>
+</span><span class='line'><span class="sh">  return listStr</span>
+</span><span class='line'><span class="sh">end run</span>
+</span><span class='line'><span class="no">EOF</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">AS_MAKE_REMINDER</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">EOF</span>
+</span><span class='line'><span class="sh">on run argv</span>
+</span><span class='line'><span class="sh">  set theList to item 1 of argv</span>
+</span><span class='line'><span class="sh">  set theName to item 2 of argv</span>
+</span><span class='line'><span class="sh">  if item 3 of argv equal to &quot;&quot; then</span>
+</span><span class='line'><span class="sh">    set theDate to &quot;&quot;</span>
+</span><span class='line'><span class="sh">  else</span>
+</span><span class='line'><span class="sh">    set theDate to date(item 3 of argv)</span>
+</span><span class='line'><span class="sh">  end if</span>
+</span><span class='line'>
+</span><span class='line'><span class="sh">  tell application &quot;Reminders&quot;</span>
+</span><span class='line'><span class="sh">    tell list theList</span>
+</span><span class='line'><span class="sh">      if theDate equal to &quot;&quot; then</span>
+</span><span class='line'><span class="sh">        make new reminder with properties {name:theName, body:&quot;&quot;}</span>
+</span><span class='line'><span class="sh">      else</span>
+</span><span class='line'><span class="sh">        make new reminder with properties {name:theName, body:&quot;&quot;, due date:theDate}</span>
+</span><span class='line'><span class="sh">      end if</span>
+</span><span class='line'><span class="sh">    end tell</span>
+</span><span class='line'><span class="sh">  end tell</span>
+</span><span class='line'><span class="sh">end run</span>
+</span><span class='line'><span class="no">EOF</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">lists</span> <span class="o">=</span> <span class="sb">`osascript -e &#39;</span><span class="si">#{</span><span class="no">AS_GET_LIST</span><span class="si">}</span><span class="sb">&#39;`</span>
+</span><span class='line'><span class="n">lists</span> <span class="o">=</span> <span class="n">lists</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span> <span class="c1"># strip \n, and get [&quot;Life&quot;, &quot;Work&quot;, ...]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">line</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">strip</span>
+</span><span class='line'><span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="o">!</span><span class="n">line</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;^&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="n">body</span> <span class="o">=</span> <span class="n">parts</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span><span class='line'><span class="n">date_str</span> <span class="o">=</span> <span class="n">parts</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">parts</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="p">:</span> <span class="kp">nil</span>
+</span><span class='line'><span class="n">due_date</span> <span class="o">=</span> <span class="no">Chronic</span><span class="o">.</span><span class="n">parse</span> <span class="n">date_str</span>
+</span><span class='line'><span class="n">due_date_str</span> <span class="o">=</span> <span class="n">due_date</span> <span class="p">?</span> <span class="n">due_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m/%d/%Y %I:%M%p&quot;</span><span class="p">)</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">words</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">list</span> <span class="o">=</span> <span class="n">words</span><span class="o">.</span><span class="n">find</span> <span class="p">{</span><span class="o">|</span><span class="n">w</span><span class="o">|</span> <span class="n">w</span><span class="o">.</span><span class="n">start_with?</span> <span class="s2">&quot;@&quot;</span><span class="p">}</span>
+</span><span class='line'><span class="n">words</span><span class="o">.</span><span class="n">delete</span> <span class="n">list</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">list</span> <span class="o">=</span> <span class="n">lists</span><span class="o">.</span><span class="n">find</span> <span class="p">{</span><span class="o">|</span><span class="n">l</span><span class="o">|</span> <span class="n">list</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="sr">/^@/</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">eql?</span> <span class="n">l</span><span class="o">.</span><span class="n">upcase</span><span class="p">}</span> <span class="k">if</span> <span class="n">list</span>
+</span><span class='line'><span class="n">list</span> <span class="o">=</span> <span class="n">lists</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="k">if</span> <span class="o">!</span><span class="n">list</span>
+</span><span class='line'>
+</span><span class='line'><span class="sb">`osascript -e &#39;</span><span class="si">#{</span><span class="no">AS_MAKE_REMINDER</span><span class="si">}</span><span class="sb">&#39; </span><span class="si">#{</span><span class="n">list</span><span class="si">}</span><span class="sb"> &quot;</span><span class="si">#{</span><span class="n">words</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">&quot; &quot;</span><span class="si">#{</span><span class="n">due_date_str</span><span class="si">}</span><span class="sb">&quot;`</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="vg">$?</span><span class="o">.</span><span class="n">to_i</span> <span class="o">==</span> <span class="mi">0</span>
+</span><span class='line'>  <span class="sb">`terminal-notifier -message &quot;</span><span class="si">#{</span><span class="n">words</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">&quot; -title &quot;</span><span class="si">#{</span><span class="s2">&quot;Reminder @&quot;</span> <span class="o">+</span> <span class="n">list</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="n">due_date</span> <span class="p">?</span> <span class="n">date_str</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="si">}</span><span class="sb">&quot; -group new_reminder -activate &quot;com.apple.Reminders&quot;`</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>  <span class="sb">`terminal-notifier -message &quot;Oops... Something was wrong&quot; -title &quot;New Reminder&quot; -group new_reminder -activate &quot;com.apple.Reminders&quot;`</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Some notes about this script:</p>
+
+<ul>
+<li><p>The script is written in Ruby, and it uses 2 gems: <code>chronic</code> for parsing human readable date string and <code>terminal-notifier</code> for send notification using Notification Center. As <code>chronic</code> cannot work well with Ruby 1.9.3 as of this writing,
+I forced the script to be executed using system ruby (/usr/bin/ruby) which is of version 1.8.7 in OS X 10.8. Anyway, you need to install those 2 gems using <code>gem install chronic</code> and <code>gem install terminal-notifier</code>.</p></li>
+<li><p>As it uses Notification Center, it should only work on OS X 10.8+. But it is easy to be tweaked to drop notification or use other notification services like Growl.</p></li>
+<li><p>Some AppleScript code is embedded and executed by <code>osascript</code> to interact with Reminder.app.
+This script could be written entirely in AppleScript, but I chose Ruby + AppleScript way as
+it is much easier to write most part of the logic in Ruby.</p></li>
+<li><p>The usage of this action: assuming it is correctly installed, launch QS, hit &#8220;.&#8221; to enter text mode, write your reminder message, hit tab key to focus on the 2nd pane, and choose &#8220;NewReminder&#8221; action. Your reminder should be created.</p></li>
+<li><p>You can set list and/or due date in your message. The list name should be prefixed with <code>@</code>. The due date string can be any human readable format understandable by <a href="https://github.com/mojombo/chronic">chronic</a>. Due date must be prefixed with <code>^</code> and be the last part of the message.
+For example, <code>call my mom @life ^tomorrow 6pm</code> will create a reminder <code>call my mom</code> in the <code>life</code> list and set due date to 6pm of tomorrow.</p></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[make spritesheet generation automatic using makefile and texturepacker]]></title>
