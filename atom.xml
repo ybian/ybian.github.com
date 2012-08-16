@@ -4,7 +4,7 @@
   <title><![CDATA[Power of Two]]></title>
   <link href="http://ybian.github.com/atom.xml" rel="self"/>
   <link href="http://ybian.github.com/"/>
-  <updated>2012-08-16T21:31:02+08:00</updated>
+  <updated>2012-08-16T21:34:13+08:00</updated>
   <id>http://ybian.github.com/</id>
   <author>
     <name><![CDATA[Bian Ying]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<p>I recently switched to Reminder.app as my ToDo management tool, after upgrading to Mountain Lion. The only thing I missed is a hotkey window
 to create a new reminder instantly. As always, I turn to Quicksilver for this kind of things.</p>
 
-<p>So, I wrote a Quicksilver action (in Ruby). The following is the screenshot of how it works in action.
+<p>So, I wrote a Quicksilver action (in Ruby). The following is the screenshot of how it works.
 <img src="http://ybian.github.com/images/make_new_reminder.jpg"></p>
 
 <!-- more -->
