@@ -14,7 +14,7 @@ So, I wrote a Quicksilver action (in Ruby). The following is the screenshot of h
 
 <!-- more -->
 
-And here is the source code. Just drop it under `~/Library/Application Support/Quicksilver/Actions` and make it executable by using `chmod 755 <script>` in terminal (thanks to Luke for pointing it out), then restart Quicksilver.
+And here is the source code. Just drop it under `~/Library/Application Support/Quicksilver/Actions` and make it executable by using `chmod 755 NewReminder.rb` in terminal (thanks to Luke for pointing it out), then restart Quicksilver.
 
 {% include_code lang:ruby NewReminder.rb %}
 
