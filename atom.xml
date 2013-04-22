@@ -4,7 +4,7 @@
   <title><![CDATA[Power of Two]]></title>
   <link href="http://ybian.github.com/atom.xml" rel="self"/>
   <link href="http://ybian.github.com/"/>
-  <updated>2012-08-16T21:34:13+08:00</updated>
+  <updated>2013-04-22T09:07:29+08:00</updated>
   <id>http://ybian.github.com/</id>
   <author>
     <name><![CDATA[Bian Ying]]></name>
@@ -27,7 +27,7 @@ to create a new reminder instantly. As always, I turn to Quicksilver for this ki
 <!-- more -->
 
 
-<p>And here is the source code. Just drop it under <code>~/Library/Application Support/Quicksilver/Actions</code> and restart Quicksilver.</p>
+<p>And here is the source code. Just drop it under <code>~/Library/Application Support/Quicksilver/Actions</code> and make it executable by using <code>chmod 755 &lt;script&gt;</code> in terminal (thanks to Luke for pointing it out), then restart Quicksilver.</p>
 
 <figure class='code'><figcaption><span> (NewReminder.rb)</span> <a href='http://ybian.github.com/downloads/code/NewReminder.rb'>download</a></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
