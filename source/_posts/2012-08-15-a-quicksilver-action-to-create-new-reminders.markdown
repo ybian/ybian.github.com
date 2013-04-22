@@ -9,12 +9,12 @@ categories:
 I recently switched to Reminder.app as my ToDo management tool, after upgrading to Mountain Lion. The only thing I missed is a hotkey window
 to create a new reminder instantly. As always, I turn to Quicksilver for this kind of things.
 
-So, I wrote a Quicksilver action (in Ruby). The following is the screenshot of how it works in action.
+So, I wrote a Quicksilver action (in Ruby). The following is the screenshot of how it works.
 {% img /images/make_new_reminder.jpg %}
 
 <!-- more -->
 
-And here is the source code. Just drop it under `~/Library/Application Support/Quicksilver/Actions` and restart Quicksilver.
+And here is the source code. Just drop it under `~/Library/Application Support/Quicksilver/Actions` and make it executable by using `chmod 755 <script>` in terminal (thanks to Luke for pointing it out), then restart Quicksilver.
 
 {% include_code lang:ruby NewReminder.rb %}
 
